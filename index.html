@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Simulador Vendedores</title>
+<style>
+  :root{--navy:#123A63;--blue:#1F5E96;--pale:#EEF5FB;--input:#DDEBF7;--grid:#B9C6D1;--gray:#E8EDF2;--text:#3F4A56;--green:#D9EAD3;--greenText:#1F6D3A;}
+  *{box-sizing:border-box} body{font-family:Calibri,Arial,sans-serif;background:#f4f7fa;margin:0;padding:24px;color:var(--text)}
+  .sheet{max-width:1120px;margin:0 auto;background:white;padding:0 0 24px;border-radius:8px;box-shadow:0 8px 30px rgba(0,0,0,.12);overflow:hidden}
+  table{border-collapse:collapse;width:100%;table-layout:fixed;font-size:14px} td{border:1px solid var(--grid);padding:5px 7px;height:27px;vertical-align:middle;word-wrap:break-word}
+  .w-a{width:23%}.w-b{width:11%}.w-c{width:17%}.w-d{width:16%}.w-e{width:2%}.w-f{width:19%}.w-g{width:12%}
+  .title{background:var(--navy);color:white;text-align:center;font-size:23px;font-weight:700;height:38px;letter-spacing:.2px}
+  .subtitle{background:var(--pale);text-align:center;font-size:13px;height:30px}.section{background:var(--blue);color:white;font-weight:700}.section.center{text-align:center}.minihead{background:var(--gray);font-weight:700;text-align:center}.label{background:var(--gray);font-weight:700}.computed{background:#F5F7F9;font-weight:700;text-align:center}.money{text-align:center;font-weight:700}.note{background:var(--pale);font-size:12px;text-align:center}.rulesTitle{background:var(--navy);color:white;font-weight:700;font-size:19px;text-align:center;height:42px}.rulesSub{background:var(--blue);color:white;font-weight:700;height:36px}.ruleLabel{background:var(--gray);font-weight:700}.ruleText{text-align:center;line-height:1.22}.totalHead{background:var(--navy);color:white;text-align:center;font-size:18px;font-weight:700}.total{background:var(--green);color:var(--greenText);font-size:30px;font-weight:700;text-align:center;height:52px}
+  input,select{width:100%;border:0;background:var(--input);font:inherit;color:var(--text);text-align:center;padding:5px 3px;outline:1px solid transparent} input:focus,select:focus{outline:2px solid #55a4df}.inputCell{background:var(--input);padding:0}.center{text-align:center}.right{text-align:right}.blank{border:0;background:white}.spacer td{height:18px;border-left:0;border-right:0;background:white}.small{font-size:12px}.wrap{line-height:1.18}.printbar{max-width:1120px;margin:0 auto 12px;display:flex;gap:8px;justify-content:flex-end}.btn{border:0;background:var(--blue);color:white;padding:10px 14px;border-radius:6px;font-weight:700;cursor:pointer}.btn:hover{background:var(--navy)}.btn.clear{background:#6c7a86}.btn.clear:hover{background:#4f5b65}
+  @media print{body{background:white;padding:0}.sheet{box-shadow:none;border-radius:0}.printbar{display:none}td{page-break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="printbar"><button class="btn clear" onclick="limparPreenchimento()">LIMPAR PREENCHIMENTO</button><button class="btn" onclick="window.print()">Imprimir / Salvar PDF</button></div>
+<div class="sheet">
+<table>
+<colgroup><col class="w-a"><col class="w-b"><col class="w-c"><col class="w-d"><col class="w-e"><col class="w-f"><col class="w-g"><col class="w-g"></colgroup>
+<tr><td colspan="8" class="title">SIMULADOR VENDEDORES</td></tr>
+<tr><td colspan="8" class="subtitle">Preencha apenas as células em azul-claro. Os ganhos serão calculados automaticamente.</td></tr>
+<tr class="spacer"><td colspan="8"></td></tr>
+<tr><td colspan="4" class="section">CADASTRO</td><td class="blank"></td><td colspan="3" class="section center">RESUMO DE GANHOS</td></tr>
+<tr><td class="label">Nome do Vendedor</td><td colspan="3" class="inputCell"><input id="nome" value="MARIA"></td><td class="blank"></td><td class="minihead">Categoria</td><td colspan="2" class="minihead">Valor</td></tr>
+<tr><td class="label">Nível</td><td colspan="3" class="inputCell"><select id="nivel"><option>Vendedor</option><option>Vendedor Pleno</option><option selected>Vendedor Sênior</option></select></td><td class="blank"></td><td>Comissão Serviços</td><td colspan="2" id="g6" class="money">R$ 0,00</td></tr>
+<tr><td class="label">Qualidade Total (Campanha)</td><td colspan="3" class="inputCell"><select id="qTotal"><option selected>A</option><option>B</option><option>C</option></select></td><td class="blank"></td><td>Comissão Aparelhos</td><td colspan="2" id="g7" class="money">R$ 0,00</td></tr>
+<tr><td class="label">Qualidade Pós (Comissão Serviços)</td><td class="inputCell"><select id="qPos"><option selected>A</option><option>B</option><option>C</option></select></td><td class="label center">Qualidade Controle</td><td class="inputCell"><select id="qControle"><option selected>A</option><option>B</option><option>C</option></select></td><td class="blank"></td><td>Comissão Acessórios</td><td colspan="2" id="g8" class="money">R$ 0,00</td></tr>
+<tr><td colspan="4" class="section">RESULTADOS DO MÊS</td><td class="blank"></td><td>Comissão Pitzi</td><td colspan="2" id="g9" class="money">R$ 0,00</td></tr>
+<tr><td class="minihead">Indicador</td><td class="minihead">Meta</td><td class="minihead">Realizado</td><td class="minihead">% de Atingimento</td><td class="blank"></td><td>Comissão Upgrade</td><td colspan="2" id="g10" class="money">R$ 0,00</td></tr>
+<tr><td>Faturamento TIM</td><td class="inputCell"><input id="b11" type="number" step="0.01" value="4100"></td><td class="inputCell"><input id="c11" type="number" step="0.01" value="8000"></td><td id="d11" class="computed">0,00%</td><td class="blank"></td><td>Campanha Vendedores</td><td colspan="2" id="g11" class="money">R$ 0,00</td></tr>
+<tr><td>Aparelhos</td><td class="inputCell"><input id="b12" type="number" step="0.01" value="21000"></td><td class="inputCell"><input id="c12" type="number" step="0.01" value="50000"></td><td id="d12" class="computed">0,00%</td><td class="blank"></td><td>Gross Pós</td><td colspan="2" id="g12" class="money">R$ 0,00</td></tr>
+<tr><td>Acessórios</td><td class="inputCell"><input id="b13" type="number" step="0.01" value="5200"></td><td class="inputCell"><input id="c13" type="number" step="0.01" value="25000"></td><td id="d13" class="computed">0,00%</td><td class="blank"></td><td>Gross Controle</td><td colspan="2" id="g13" class="money">R$ 0,00</td></tr>
+<tr><td>Pós (Qtd)</td><td class="inputCell"><input id="b14" type="number" step="1" value="8"></td><td class="inputCell"><input id="c14" type="number" step="1" value="16"></td><td id="d14" class="computed">0,00%</td><td class="blank"></td><td>Pós Dobrado</td><td colspan="2" id="g14" class="money">R$ 0,00</td></tr>
+<tr><td>Fibra (Qtd)</td><td class="inputCell"><input id="b15" type="number" step="1" value="4"></td><td class="inputCell"><input id="c15" type="number" step="1" value="4"></td><td id="d15" class="computed">0,00%</td><td class="blank"></td><td>Desafio Acessórios</td><td colspan="2" id="g15" class="money">R$ 0,00</td></tr>
+<tr><td>Controle (Qtd)</td><td class="inputCell"><input id="b16" type="number" step="1" value="28"></td><td class="inputCell"><input id="c16" type="number" step="1" value="28"></td><td id="d16" class="computed">0,00%</td><td class="blank"></td><td>Desafio Fibra</td><td colspan="2" id="g16" class="money">R$ 0,00</td></tr>
+<tr><td>Conversão Controle (%)</td><td class="inputCell"><input id="b17" type="number" step="0.01" value="0.45"></td><td class="inputCell"><input id="c17" type="number" step="0.01" value="0.8"></td><td id="d17" class="computed">OK</td><td class="blank"></td><td>Salário Fixo</td><td colspan="2" class="inputCell"><input id="g17" type="number" step="0.01" value="1600"></td></tr>
+<tr><td>Upgrade (R$)</td><td class="inputCell"><input id="b18" type="number" step="0.01" value="550"></td><td class="inputCell"><input id="c18" type="number" step="0.01" value="960"></td><td id="d18" class="computed">0,00%</td><td class="blank"></td><td colspan="3" class="totalHead">TOTAL A RECEBER</td></tr>
+<tr><td>Upgrade (Qtd)</td><td class="inputCell"><input id="b19" type="number" step="1" value="1"></td><td class="inputCell"><input id="c19" type="number" step="1" value="4"></td><td class="computed"></td><td class="blank"></td><td colspan="3" rowspan="3" id="total" class="total">R$ 0,00</td></tr>
+<tr><td>Portabilidade</td><td class="inputCell"><input id="b20" type="number" step="1" value="6"></td><td class="inputCell"><input id="c20" type="number" step="1" value="6"></td><td id="d20" class="computed">0,00%</td><td class="blank"></td></tr>
+<tr><td>Pitzi (R$)</td><td class="inputCell"><input id="b21" type="number" step="0.01" value="120"></td><td class="inputCell"><input id="c21" type="number" step="0.01" value="120"></td><td id="d21" class="computed">0,00%</td><td class="blank"></td></tr>
+<tr><td>Meu TIM (%)</td><td class="inputCell"><input id="b22" type="number" step="0.01" value="0.5"></td><td class="inputCell"><input id="c22" type="number" step="0.01" value="0.5"></td><td id="d22" class="computed">OK</td><td class="blank"></td><td colspan="3" rowspan="2" class="note">Dica: preencha apenas as células azul-claro. Upgrade (R$) mede a meta; Upgrade (Qtd) calcula a comissão por unidade.</td></tr>
+<tr><td>Desafio Acessórios Atingido</td><td></td><td class="inputCell"><select id="c23"><option selected>Sim</option><option>Não</option></select></td><td class="computed"></td><td class="blank"></td></tr>
+<tr><td>Desafio Fibra Atingido</td><td></td><td class="inputCell"><select id="c24"><option selected>Sim</option><option>Não</option></select></td><td class="computed"></td><td class="blank"></td><td colspan="3" rowspan="2" class="note">Para PDVs sem viabilidade de Fibra, preencher obrigatoriamente os campos Meta e Realizado com 1, para validar a Campanha Gross Pós</td></tr>
+<tr class="spacer"><td colspan="5"></td></tr>
+<tr><td colspan="8" class="rulesTitle">REGRAS DE COMISSÃO E CAMPANHAS</td></tr>
+<tr><td colspan="8" class="subtitle">As regras abaixo resumem os critérios utilizados automaticamente pelo simulador.</td></tr>
+<tr class="spacer"><td colspan="8"></td></tr>
+<tr><td colspan="8" class="rulesSub">COMISSÕES SOBRE VENDAS</td></tr>
+<tr><td colspan="2" class="ruleLabel">Nível do Vendedor</td><td colspan="6" class="ruleText">Vendedor recebe a comissão-base. Vendedor Pleno recebe 1,5 vez a comissão-base e Vendedor Sênior recebe 2 vezes a comissão-base.</td></tr>
+<tr><td colspan="2" class="ruleLabel">Qualidade</td><td colspan="6" class="ruleText">Existem três campos independentes: Qualidade Total, Qualidade Pós e Qualidade Controle. Em todos eles, A = 100%, B = 80% e C = 70%. A Qualidade Total afeta somente a Campanha Vendedores. As Qualidades Pós e Controle afetam somente a Comissão de Serviços.</td></tr>
+<tr><td colspan="2" class="ruleLabel">Faturamento TIM</td><td colspan="6" class="ruleText">Abaixo de 80% da meta não há comissão. De 80% a 99,99%: 4%. De 100% a 119,99%: 8,5%. A partir de 120%: 12,5%. Aplicam-se o multiplicador do nível e os deflatores de qualidade: metade da comissão é impactada pela Qualidade Pós e metade pela Qualidade Controle.</td></tr>
+<tr><td colspan="2" class="ruleLabel">Aparelhos</td><td colspan="6" class="ruleText">Abaixo de 80% da meta não há comissão. De 80% a 99,99%: 0,5%. De 100% a 119,99%: 0,75%. A partir de 120%: 0,85%. Aplica-se o multiplicador do nível.</td></tr>
+<tr><td colspan="2" class="ruleLabel">Acessórios</td><td colspan="6" class="ruleText">Abaixo de 80% da meta não há comissão. De 80% a 99,99%: 2,5%. De 100% a 119,99%: 5%. A partir de 120%: 7,5%. Aplica-se o multiplicador do nível.</td></tr>
+<tr><td colspan="2" class="ruleLabel">Pitzi</td><td colspan="6" class="ruleText">Abaixo de 100% da meta em R$ não há comissão. De 100% a 119,99%: 5% sobre o valor realizado. A partir de 120%: 10% sobre o valor realizado. Aplica-se o multiplicador do nível.</td></tr>
+<tr><td colspan="2" class="ruleLabel">Upgrade</td><td colspan="6" class="ruleText">A comissão somente é liberada quando as metas de Faturamento TIM e Upgrade em R$ forem atingidas. O pagamento é calculado pela quantidade de Upgrades realizados: R$ 7,50 por unidade para Vendedor, R$ 11,25 para Pleno e R$ 15,00 para Sênior.</td></tr>
+<tr class="spacer"><td colspan="8"></td></tr>
+<tr><td colspan="8" class="rulesSub">CAMPANHAS E BÔNUS</td></tr>
+<tr><td colspan="2" class="ruleLabel">Campanha Vendedores</td><td colspan="6" class="ruleText">É necessário atingir simultaneamente: 110% de Faturamento TIM, 110% de Aparelhos, 120% de Acessórios, 100% de Fibra, 100% de Upgrade em R$, 100% de Pitzi em R$, 100% de Portabilidade e pelo menos 50% de Meu TIM. O bônus de R$ 500 / R$ 750 / R$ 1.000, conforme o nível, é afetado exclusivamente pela Qualidade Total: A = 100%, B = 80% e C = 70%.</td></tr>
+<tr><td colspan="2" class="ruleLabel">Gross Pós</td><td colspan="6" class="ruleText">É necessário atingir a meta de Pós, realizar no mínimo 5 ativações e atingir a meta de Fibra. Bônus: R$ 100 / R$ 150 / R$ 200. Nos PDVs sem viabilidade de Fibra, preencher Meta e Realizado de Fibra com 1 para validar a campanha.</td></tr>
+<tr><td colspan="2" class="ruleLabel">Gross Controle</td><td colspan="6" class="ruleText">É necessário atingir a meta de Controle e alcançar conversão igual ou superior à meta cadastrada (padrão de 45%). Bônus: R$ 100 / R$ 150 / R$ 200.</td></tr>
+<tr><td colspan="2" class="ruleLabel">Pós Dobrado</td><td colspan="6" class="ruleText">É necessário realizar pelo menos o dobro da meta de Pós e no mínimo 10 ativações. Bônus: R$ 150 / R$ 225 / R$ 300.</td></tr>
+<tr><td colspan="2" class="ruleLabel">Desafio Acessórios</td><td colspan="6" class="ruleText">Quando o campo "Desafio Acessórios Atingido" estiver como "Sim", o bônus será de R$ 150 / R$ 225 / R$ 300. Vendedores com desafio abaixo de R$5000,00 receberão um valor máximo de R$150,00 de bonificação.</td></tr>
+<tr><td colspan="2" class="ruleLabel">Desafio Fibra</td><td colspan="6" class="ruleText">Quando o campo "Desafio Fibra Atingido" estiver como "Sim", o bônus será de R$ 200 / R$ 300 / R$ 400.</td></tr>
+<tr class="spacer"><td colspan="8"></td></tr>
+<tr><td colspan="8" class="rulesSub">REGRAS GERAIS</td></tr>
+<tr><td colspan="2" class="ruleLabel">Total a Receber</td><td colspan="6" class="ruleText">O total soma todas as comissões, campanhas, bônus e o salário fixo informado. Somente as células em azul-claro devem ser preenchidas ou alteradas.</td></tr>
+</table>
+</div>
+<script>
+const params={
+  nivel:{'Vendedor':{m:1,up:7.5,camp:500,gp:100,gc:100,pd:150,da:150,df:200},'Vendedor Pleno':{m:1.5,up:11.25,camp:750,gp:150,gc:150,pd:225,da:225,df:300},'Vendedor Sênior':{m:2,up:15,camp:1000,gp:200,gc:200,pd:300,da:300,df:400}},
+  qual:{A:1,B:.8,C:.7}, serv:[[.8,.04],[1,.085],[1.2,.125]], apar:[[.8,.005],[1,.0075],[1.2,.0085]], acess:[[.8,.025],[1,.05],[1.2,.075]]
+};
+function n(id){const v=parseFloat(document.getElementById(id).value); return isNaN(v)?0:v}
+function s(id){return document.getElementById(id).value}
+function pct(v){return isFinite(v)?v:0}
+function brl(v){return (isFinite(v)?v:0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}
+function perc(v){return (isFinite(v)?v:0).toLocaleString('pt-BR',{style:'percent',minimumFractionDigits:2,maximumFractionDigits:2})}
+function faixa(arr,a){let r=0; for(const [lim,t] of arr){if(a>=lim) r=t} return r}
+function hit(meta,real){return meta?real/meta:0}
+function set(id,val){document.getElementById(id).textContent=val}
+function calc(){
+  const N=params.nivel[s('nivel')]||{m:0,up:0,camp:0,gp:0,gc:0,pd:0,da:0,df:0}, qT=params.qual[s('qTotal')]||0, qP=params.qual[s('qPos')]||0, qC=params.qual[s('qControle')]||0;
+  const b11=n('b11'),c11=n('c11'),b12=n('b12'),c12=n('c12'),b13=n('b13'),c13=n('c13'),b14=n('b14'),c14=n('c14'),b15=n('b15'),c15=n('c15'),b16=n('b16'),c16=n('c16'),b17=n('b17'),c17=n('c17'),b18=n('b18'),c18=n('c18'),c19=n('c19'),b20=n('b20'),c20=n('c20'),b21=n('b21'),c21=n('c21'),b22=n('b22'),c22=n('c22'),sal=n('g17');
+  const d11=hit(b11,c11),d12=hit(b12,c12),d13=hit(b13,c13),d14=hit(b14,c14),d15=hit(b15,c15),d16=hit(b16,c16),d18=hit(b18,c18),d20=hit(b20,c20),d21=hit(b21,c21);
+  set('d11',perc(d11));set('d12',perc(d12));set('d13',perc(d13));set('d14',perc(d14));set('d15',perc(d15));set('d16',perc(d16));set('d17',c17>=b17?'OK':'NÃO');set('d18',perc(d18));set('d20',perc(d20));set('d21',perc(d21));set('d22',c22>=b22?'OK':'NÃO');
+  const g6=(b11&&d11>=.8)?((c11*faixa(params.serv,d11)*N.m)/2*qP)+((c11*faixa(params.serv,d11)*N.m)/2*qC):0;
+  const g7=(b12&&d12>=.8)?c12*faixa(params.apar,d12)*N.m:0;
+  const g8=(b13&&d13>=.8)?c13*faixa(params.acess,d13)*N.m:0;
+  const g9=(b21&&d21>=1)?c21*(d21<1.2?.05:.10)*N.m:0;
+  const g10=(b11&&b18&&c11>=b11&&c18>=b18)?c19*N.up:0;
+  const campOK=b11&&b12&&b13&&b15&&b18&&b20&&b21&&d11>=1.1&&d12>=1.1&&d13>=1.2&&d15>=1&&d18>=1&&d21>=1&&d20>=1&&c22>=.5;
+  const g11=campOK?N.camp*qT:0;
+  const g12=(b14&&b15&&c14>=b14&&c14>=5&&c15>=b15)?N.gp:0;
+  const g13=(b16&&c16>=b16&&c17>=b17)?N.gc:0;
+  const g14=(b14&&c14>=2*b14&&c14>=10)?N.pd:0;
+  const g15=s('c23')==='Sim'?N.da:0;
+  const g16=s('c24')==='Sim'?N.df:0;
+  const vals={g6,g7,g8,g9,g10,g11,g12,g13,g14,g15,g16};
+  Object.entries(vals).forEach(([k,v])=>set(k,brl(v)));
+  set('total',brl(Object.values(vals).reduce((a,b)=>a+b,0)+sal));
+}
+
+function prepararCamposParaLimpeza(){
+  document.querySelectorAll('select').forEach(sel=>{
+    if(!Array.from(sel.options).some(opt=>opt.value==='')){
+      const opt=document.createElement('option');
+      opt.value=''; opt.textContent='';
+      sel.insertBefore(opt, sel.firstChild);
+    }
+  });
+}
+function limparPreenchimento(){
+  document.querySelectorAll('input').forEach(campo=>{ campo.value=''; });
+  document.querySelectorAll('select').forEach(campo=>{ campo.value=''; });
+  calc();
+}
+prepararCamposParaLimpeza();
+document.querySelectorAll('input,select').forEach(el=>el.addEventListener('input',calc));
+calc();
+</script>
+</body>
+</html>
